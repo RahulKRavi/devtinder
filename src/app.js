@@ -1,17 +1,35 @@
 const express = require('express')
 const app = express()
+const mongoose = require('mongoose')
+const connectDB = mongoose.connect("mongodb+srv://rahulkr02042000:gfceHgXKD3L4ZAUH@violetbooks.7suo0.mongodb.net/devTinder")
+const User = require('./models/userModel')
 
-const {adminAuth} = require('./middlewares/auth')
-
-
-app.get('/admin/getUserData', adminAuth, (req, res) => {
-  res.send("All user Data is loaded")
+app.post('/signup', async (req, res) => {
+  try {
+    const user = new User({
+      firstName: "Rahul",
+      lastName: "Ravi",
+      email: "fuckyou@gmail.com",
+      password: "8989",
+      age: 23,
+      gender: "Male"
+    })
+    await user.save()
+    res.send("User added successfully")
+  } catch(err) {
+    console.log(err.message)
+    res.status(404).send("Something fishy")
+  }
 })
 
-app.get('/admin/getProductData', adminAuth, (req, res) => {
-  res.send("All product data is loaded")
+connectDB.then(()=>{
+  console.log("Database Connected Succesfully")
+  app.listen(2222,()=>{
+    console.log("Server started running on 2222.......")
+  })
+}).catch(err=>{
+  console.error("Database connection failed")
 })
 
-app.listen(2222,()=>{
-  console.log("Server started running on 2222.......")
-})
+
+

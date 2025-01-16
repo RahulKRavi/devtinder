@@ -1,5 +1,5 @@
 const adminAuth =  (req, res, next) => {
-  const token = 'ac'
+  const token = 'abc'
   const isAdminAuth = token === 'abc';
   if(isAdminAuth){
     next();
