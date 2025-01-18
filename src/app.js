@@ -28,6 +28,28 @@ app.get('/feed', async (req, res) => {
     res.status(401).send("Something shit happens")
   }
 })
+
+app.delete('/user', async (req, res) => {
+  const userId = req.body.userId;
+  try {
+    console.log(await User.findByIdAndDelete(userId))
+    res.send("User is Deleted")
+  } catch (err) {
+    res.status(402).send("Oh shit! Something bad happens")
+  }
+})
+
+app.patch('/user', async (req, res) => {
+  const userId = req.body.userId;
+  try {
+    const userInfo = await User.findByIdAndUpdate(userId,{age: 28})
+    res.send("User data got updated")
+  } catch(err) {
+    res.status(403).send("Oh shit! Something bad happens")
+  }
+})
+
+
 connectDB.then(()=>{
   console.log("Database Connected Succesfully")
   app.listen(2222,()=>{
