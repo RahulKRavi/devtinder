@@ -10,6 +10,7 @@ const validateSignUp = require('./helpers/validate')
 const bcrypt = require('bcrypt')
 const validator = require('validator')
 const jwt = require('jsonwebtoken')
+const {userAuth} = require('./middlewares/auth')
 
 
 app.post('/signup', async (req, res) => {
@@ -87,11 +88,22 @@ app.post('/login', async (req, res) => {
   }
 })
 
-app.get('/profile', async (req, res) => {
- const {token} = req.cookies
- const {_id} = jwt.verify(token,"ThengaMan")
- const user = await User.findById(_id)
- res.send(user)
+app.get('/profile', userAuth, async (req, res) => {
+  try{
+    const user = req.user
+    res.send(user)
+  } catch(err) {
+    res.status(401).send("ERROR "+err.message )
+  }
+
+})
+app.post('/sendConnectionRequest', userAuth, async (req, res)=>{
+  try{
+    res.send("Request Send")
+  } catch (err) {
+    
+  }
+
 })
 
 
