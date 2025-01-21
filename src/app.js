@@ -1,18 +1,33 @@
 const express = require('express')
 const app = express()
 app.use(express.json())
+const cookieParser = require('cookie-parser')
+app.use(cookieParser())
 const mongoose = require('mongoose')
 const connectDB = mongoose.connect("mongodb+srv://rahulkr02042000:gfceHgXKD3L4ZAUH@violetbooks.7suo0.mongodb.net/devTinder")
 const User = require('./models/userModel')
+const validateSignUp = require('./helpers/validate')
+const bcrypt = require('bcrypt')
+const validator = require('validator')
+const jwt = require('jsonwebtoken')
+
 
 app.post('/signup', async (req, res) => {
   try {
-    const user = new User(req.body)
+    validateSignUp(req)
+    const {firstName, lastName, email, password} = req.body
+    const passwordHash = await bcrypt.hash(password,10)
+    const user = new User({
+      firstName,
+      lastName,
+      email,
+      password: passwordHash
+    })
     await user.save()
     res.send("User added successfully")
   } catch(err) {
     console.log(err.message)
-    res.status(404).send("Something fishy")
+    res.status(404).send("ERROR: " + err.message)
   }
 })
 
@@ -47,6 +62,36 @@ app.patch('/user', async (req, res) => {
   } catch(err) {
     res.status(403).send("Oh shit! Something bad happens")
   }
+})
+
+app.post('/login', async (req, res) => {
+  try{
+    const {email,password} = req.body
+    if(!validator.isEmail(email)){
+      throw new Error('Enter a Valid Email')
+    }
+    const user = await User.findOne({email: email})
+    if(!user){
+      throw new Error('Invalid Credentials')
+    } else {
+      const isPwdMatch = await bcrypt.compare(password,"$2b$10$iXWvproTe5yEkbbU6WRRTOYHApqBlc1CfBSV.TZQkTcdX5O010aa6")
+      if(!isPwdMatch){
+        throw new Error('Invalid Credentials')
+      }
+      const token = jwt.sign({_id:user._id},'ThengaMan')
+      res.cookie('token',token)
+      res.send("User veryified")
+    }
+  } catch(err) {
+    res.status(404).send('ERROR: ' + err.message)
+  }
+})
+
+app.get('/profile', async (req, res) => {
+ const {token} = req.cookies
+ const {_id} = jwt.verify(token,"ThengaMan")
+ const user = await User.findById(_id)
+ res.send(user)
 })
 
 
