@@ -75,12 +75,12 @@ app.post('/login', async (req, res) => {
     if(!user){
       throw new Error('Invalid Credentials')
     } else {
-      const isPwdMatch = await bcrypt.compare(password,"$2b$10$iXWvproTe5yEkbbU6WRRTOYHApqBlc1CfBSV.TZQkTcdX5O010aa6")
+      const isPwdMatch = await user.validatePwd(password)
       if(!isPwdMatch){
         throw new Error('Invalid Credentials')
       }
-      const token = jwt.sign({_id:user._id},'ThengaMan')
-      res.cookie('token',token)
+      const token = await user.getJWT()
+      res.cookie('token',token,{maxAge: 900000})
       res.send("User veryified")
     }
   } catch(err) {
