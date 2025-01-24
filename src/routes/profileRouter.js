@@ -1,0 +1,35 @@
+const express = require('express')
+const profileRouter = express.Router();
+const {userAuth} = require('../middlewares/auth')
+const {validateEditForm} = require('../helpers/validate')
+
+profileRouter.get('/profile/view', userAuth, async (req, res) => {
+  try{
+    const user = req.user
+    res.send(user)
+  } catch(err) {
+    res.status(401).send("ERROR "+err.message )
+  }
+
+})
+
+profileRouter.patch('/profile/edit', userAuth, async (req, res) => {
+  try{
+    if(!validateEditForm(req)){
+      throw new Error("Invalidy Entry")
+    }
+    const existingData = req.user
+    Object.keys(req.body).forEach(key => existingData[key] = req.body[key] ) 
+    await existingData.save();
+    res.send("User updated succefully")
+
+  } catch (err) {
+    res.status(404).send("ERROR: " + err.message)
+  }
+})
+
+profileRouter.patch('/profile/password', userAuth, async (req, res) => {
+  
+})
+
+module.exports = profileRouter
