@@ -16,7 +16,7 @@ profileRouter.get('/profile/view', userAuth, async (req, res) => {
 profileRouter.patch('/profile/edit', userAuth, async (req, res) => {
   try{
     if(!validateEditForm(req)){
-      throw new Error("Invalidy Entry")
+      throw new Error("Invalid Entry")
     }
     const existingData = req.user
     Object.keys(req.body).forEach(key => existingData[key] = req.body[key] ) 
