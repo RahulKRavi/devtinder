@@ -1,8 +1,15 @@
 const mongoose = require('mongoose')
 const connectDB = mongoose.connect("mongodb+srv://rahulkr02042000:gfceHgXKD3L4ZAUH@violetbooks.7suo0.mongodb.net/devTinder")
 
+
 const express = require('express')
 const app = express()
+
+const cors = require('cors')
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true
+}))
 app.use(express.json())
 
 const cookieParser = require('cookie-parser')
