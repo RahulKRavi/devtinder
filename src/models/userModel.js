@@ -51,10 +51,14 @@ const userSchema = new mongoose.Schema({
     },
   },
   about: {
-      type: String,
-      minLength: 8,
-      maxLength: 100,
-      default: "This is the default about info of user"
+    type: String,
+    minLength: 8,
+    maxLength: 100,
+    default: "This is the default about info of user"
+  },
+  photoURL: {
+    type: String,
+    maxLength: 150
   }
 },
 {
