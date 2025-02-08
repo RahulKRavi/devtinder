@@ -18,8 +18,10 @@ authRouter.post('/signup', async (req, res) => {
       age,
       photoURL
     })
-    await user.save()
-    res.send("User added successfully")
+    const savedUser = await user.save()
+    const token = await savedUser.getJWT()
+    res.cookie('token',token,{maxAge:900000})
+    res.json({message:"User saved succefully", data: savedUser})
   } catch(err) {
     res.status(404).send("ERROR: " + err.message)
   }
