@@ -6,9 +6,9 @@ const {validateEditForm} = require('../helpers/validate')
 profileRouter.get('/profile/view', userAuth, async (req, res) => {
   try{
     const user = req.user
-    res.send(user)
+    res.json({message: "Profile Loaded Succesfully", data: user})
   } catch(err) {
-    res.status(401).send("ERROR "+err.message )
+    res.status(400).send("ERROR " + err.message )
   }
 
 })
@@ -24,7 +24,7 @@ profileRouter.patch('/profile/edit', userAuth, async (req, res) => {
     res.send("User updated succefully")
 
   } catch (err) {
-    res.status(404).send("ERROR: " + err.message)
+    res.status(400).send("ERROR: " + err.message)
   }
 })
 

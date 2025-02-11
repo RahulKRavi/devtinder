@@ -13,10 +13,13 @@ userRouter.get('/user/requests/recieved', userAuth,  async (req, res) => {
       status: 'interested'
     }).populate('senderId',USER_SAFE_DATA)
 
-    res.json({message:'Here is your connection requests',data: requestsRecieved})
+    res.json({
+      message:'Requests Recieved Fetched Succefully', 
+      data: requestsRecieved
+    })
 
   } catch(err) {
-    res.status(403).send("Oh shit! Something bad happens")
+    res.status(400).send("Something Went happens")
   }
 })
 
@@ -32,16 +35,20 @@ userRouter.get('/user/requests/connections', userAuth, async (req, res) => {
     .populate('senderId',USER_SAFE_DATA)
     .populate('recieverId',USER_SAFE_DATA)
 
-
     const data = connections.map((row)=>{
       if(loggedInUser._id.toString() === row.senderId._id.toString()){
         return row.recieverId
       }
        return row.senderId
     })
-    res.json({message:"These are your connections", data})
+
+    res.json({
+      message: "Connections List Fetched Succefully", 
+      data: data
+    })
+
   } catch (err) {
-    res.status(400).send("ERROR: "+err.message)
+    res.status(400).send("ERROR: " + err.message)
   }
 })
 
@@ -70,7 +77,12 @@ userRouter.get('/user/feeds', userAuth, async (req, res) => {
         {_id:{$ne:loggedInUser._id}}
       ]
     }).select(USER_SAFE_DATA).skip(skip).limit(limit)
-    res.json({message: "Feed List", data: feedData})
+
+    res.json({
+        message: "Feed List", 
+        data: feedData
+      })
+
   } catch (err) {
       res.status(400).send("ERROR: " + err.message)
   }

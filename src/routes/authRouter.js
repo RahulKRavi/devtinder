@@ -8,20 +8,18 @@ const validator = require('validator')
 authRouter.post('/signup', async (req, res) => {
   try {
     validateSignUp(req)
-    const {firstName, lastName, email, password, age, about, photoURL} = req.body
+    const {firstName, lastName, email, password} = req.body
     const passwordHash = await bcrypt.hash(password,10)
     const user = new User({
       firstName,
       lastName,
       email,
       password: passwordHash,
-      age,
-      photoURL
     })
     const savedUser = await user.save()
     const token = await savedUser.getJWT()
     res.cookie('token',token,{maxAge:900000})
-    res.json({message:"User saved succefully", data: savedUser})
+    res.json({message:"User Saved Succefully", data: savedUser})
   } catch(err) {
     res.status(404).send("ERROR: " + err.message)
   }
@@ -42,7 +40,7 @@ authRouter.post('/login', async (req, res) => {
       }
       const token = await user.getJWT()
       res.cookie('token',token,{maxAge: 900000})
-      res.send(user)
+      res.json({message:"User LogedIn Succefully", data: user})
     }
   } catch(err) {
     res.status(404).send('ERROR: ' + err.message)

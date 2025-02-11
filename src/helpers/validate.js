@@ -15,7 +15,7 @@ const validateSignUp = (req) => {
 
 const validateEditForm = (req) => {
   //Check any unallowed fields are there
-  const allowedEditFields = ["firstName", "lastName", "about","age","photoURL"]
+  const allowedEditFields = ["firstName", "lastName", "age", "about", "gender", "photoURL"]
   const isAllowed = Object.keys(req.body).every(field => allowedEditFields.includes(field))
   return isAllowed
 }
