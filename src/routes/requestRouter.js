@@ -3,7 +3,6 @@ const requestRouter = express.Router();
 const {userAuth} = require('../middlewares/auth')
 const Request = require('../models/requestModel');
 const User = require('../models/userModel');
-const { Types } = require('mongoose');
 
 requestRouter.post('/request/send/:status/:toUserId', userAuth, async (req, res)=>{
   try{

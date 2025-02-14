@@ -57,7 +57,8 @@ const userSchema = new mongoose.Schema({
   },
   photoURL: {
     type: String,
-    maxLength: 150
+    maxLength: 150,
+    default: "https://st.depositphotos.com/25790974/61426/v/450/depositphotos_614265050-stock-illustration-gym-logo-vector-flat-design.jpg"
   }
 },
 {
